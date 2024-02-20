@@ -1,0 +1,11 @@
+sequenceDiagram
+    participant browser
+    participant server
+    Note right of browser: The browser executes the callback function that adds the new note and renders the list of notes again
+    browser->>server: POST https://studies.cs.helsinki.fi/exampleapp/new_note_spa
+    activate server
+    Note left of server: read note content and date from POST request payload
+    Note left of server: save new note in DB
+    server-->>browser: {"message":"note created"}
+    deactivate server
+
