@@ -1,4 +1,4 @@
-import Courses from './components/Courses'
+import Course from './components/Course'
 
 const App = () => {
     const courses = [
@@ -46,7 +46,11 @@ const App = () => {
         }
     ]
 
-    return <Courses courses={courses} />
+    return <div>
+        {courses.map(course =>
+            <Course key={course.id} course={course} />
+        )}
+    </div>
 
 }
 
