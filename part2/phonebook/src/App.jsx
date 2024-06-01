@@ -1,4 +1,7 @@
 import { useState } from 'react'
+import Filter from './components/Filter'
+import PersonForm from './components/PersonForm'
+import Persons from './components/Persons'
 
 const App = () => {
   const [persons, setPersons] = useState([
@@ -33,7 +36,8 @@ const App = () => {
       console.log(event.target.value);
       const newPerson = {
         name: newName,
-        phoneNumber: newPhoneNumber
+        phoneNumber: newPhoneNumber,
+        id: newName
       }
       setPersons(persons.concat(newPerson));
       setNewName('');
@@ -45,22 +49,12 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <div>filter shown with <input value={filterTerm} onChange={handleSearchTermChange}></input></div>
+      <Filter filterTerm={filterTerm} onChange={handleSearchTermChange}/>
       <h2>add a new</h2>
-      <form onSubmit={addNewPerson}>
-        <div>
-          name: <input value={newName} onChange={handleNewNameChange} />
-        </div>
-        <div>
-          number: <input value={newPhoneNumber} onChange={handleNewPhoneNumberChange} />
-        </div>
-        <div>
-          <button type="submit">add</button>
-        </div>
-      </form>
+      <PersonForm onSubmit={addNewPerson} onNameChange={handleNewNameChange} onNumberChange={handleNewPhoneNumberChange} newName={newName} newPhoneNumber={newPhoneNumber}/>
       <h2>Numbers</h2>
 
-      {personsToShow.map((person) => <div key={person.id}> {person.name} {person.phoneNumber}</div>)}
+      <Persons persons={personsToShow}/>
 
       <div>debug: {JSON.stringify(personsToShow)}</div>
     </div>
