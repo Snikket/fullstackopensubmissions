@@ -1,0 +1,7 @@
+{"persons":[
+    { "name": "Arto Klennas", "phoneNumber": "929-608-9988", "id":1},
+    { "name": "Ada Lovelace", "phoneNumber": "123-342-9988", "id":2},
+    { "name": "Dan Abramov", "phoneNumber": "929-234-9988", "id":3},
+    { "name": "Mary Poppendieck", "phoneNumber": "665-608-4859", "id":4}
+  ]
+}

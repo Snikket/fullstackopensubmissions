@@ -1,19 +1,26 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import axios from 'axios'
 import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
 import Persons from './components/Persons'
 
 const App = () => {
-  const [persons, setPersons] = useState([
-    { name: 'Arto Hellas', phoneNumber: "929-608-9988", id:1},
-    { name: 'Ada Lovelace', phoneNumber: "123-342-9988", id:2},
-    { name: 'Dave Hokins', phoneNumber: "929-234-9988", id:3},
-    { name: 'Arto Heklas', phoneNumber: "665-608-4859", id:4},
-  ]) 
+  const [persons, setPersons] = useState([]) 
   const [newName, setNewName] = useState('');
   const [newPhoneNumber, setNewPhoneNumber] = useState('');
   const [filterTerm, setFilterTerm] = useState('');
 
+  useEffect(() => {
+    console.log('in effect')
+    axios
+    .get('http://localhost:3001/persons')
+    .then(response => {
+      console.log('promise fulfilled')
+      setPersons(response.data)
+    })
+    
+  }, [])
+  
   const personsToShow = filterTerm==='' ? persons : persons.filter (person => person.name.toLowerCase().includes(filterTerm.toLowerCase()));
 
   const handleNewNameChange = (event) => {
