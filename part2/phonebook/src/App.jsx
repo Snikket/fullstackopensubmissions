@@ -40,7 +40,6 @@ const App = () => {
       const newPerson = {
         name: newName,
         phoneNumber: newPhoneNumber,
-        id: newName
       }
       personService.create(newPerson)
       .then(returnedPerson => {
@@ -49,7 +48,17 @@ const App = () => {
         setNewPhoneNumber('');
       })      
     }
+  }
 
+  const deletePerson = (person) => {
+    console.log(`here's the id`,person.id)
+    if(confirm(`Delete ${person.name} ?`)){
+    const personIdToDelete = person.id
+    personService.deletePerson(personIdToDelete)
+    .then(() => setPersons(persons.filter(person=> person.id !== personIdToDelete)))
+    .catch(error => {
+      alert(`The person with id ${id} does not exist in the DB`)
+    })}
   }
 
   return (
@@ -59,10 +68,7 @@ const App = () => {
       <h2>add a new</h2>
       <PersonForm onSubmit={addNewPerson} onNameChange={handleNewNameChange} onNumberChange={handleNewPhoneNumberChange} newName={newName} newPhoneNumber={newPhoneNumber}/>
       <h2>Numbers</h2>
-
-      <Persons persons={personsToShow}/>
-
-      <div>debug: {JSON.stringify(personsToShow)}</div>
+      <Persons persons={personsToShow} deletePerson={deletePerson}/>
     </div>
   )
 }
