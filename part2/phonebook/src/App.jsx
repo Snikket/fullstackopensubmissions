@@ -3,6 +3,7 @@ import axios from 'axios'
 import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
 import Persons from './components/Persons'
+import personService from './services/persons'
 
 const App = () => {
   const [persons, setPersons] = useState([]) 
@@ -12,13 +13,8 @@ const App = () => {
 
   useEffect(() => {
     console.log('in effect')
-    axios
-    .get('http://localhost:3001/persons')
-    .then(response => {
-      console.log('promise fulfilled')
-      setPersons(response.data)
-    })
-    
+    personService.getAll()
+    .then(initialPersons => {setPersons(initialPersons)})
   }, [])
   
   const personsToShow = filterTerm==='' ? persons : persons.filter (person => person.name.toLowerCase().includes(filterTerm.toLowerCase()));
@@ -46,9 +42,12 @@ const App = () => {
         phoneNumber: newPhoneNumber,
         id: newName
       }
-      setPersons(persons.concat(newPerson));
-      setNewName('');
-      setNewPhoneNumber('');
+      personService.create(newPerson)
+      .then(returnedPerson => {
+        setPersons(persons.concat(returnedPerson))
+        setNewName('');
+        setNewPhoneNumber('');
+      })      
     }
 
   }
