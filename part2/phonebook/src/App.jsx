@@ -4,12 +4,14 @@ import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
 import Persons from './components/Persons'
 import personService from './services/persons'
+import SuccessNotification from './components/SuccessNotification'
 
 const App = () => {
   const [persons, setPersons] = useState([]) 
   const [newName, setNewName] = useState('');
   const [newPhoneNumber, setNewPhoneNumber] = useState('');
   const [filterTerm, setFilterTerm] = useState('');
+  const [successMessage, setSuccessMessage] = useState(null);
 
   useEffect(() => {
     console.log('in effect')
@@ -44,6 +46,10 @@ const App = () => {
       if (confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)){
         personService.update(id, newPerson)
         .then(returnedPerson => {
+          setSuccessMessage(`${returnedPerson.name}'s phone number has been updated to ${returnedPerson.phoneNumber}`)
+          setTimeout(() => {
+            setSuccessMessage(null)
+          }, 5000)
           setPersons(persons.filter(person => person.name !== newPerson.name).concat(returnedPerson))
           setNewName('');
           setNewPhoneNumber('');
@@ -56,6 +62,10 @@ const App = () => {
       personService.create(newPerson)
       .then(returnedPerson => {
         setPersons(persons.concat(returnedPerson))
+        setSuccessMessage(`Added ${returnedPerson.name}`)
+        setTimeout(() => {
+          setSuccessMessage(null)
+        }, 5000)
         setNewName('');
         setNewPhoneNumber('');
       })      
@@ -76,6 +86,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <SuccessNotification message={successMessage}/>
       <Filter filterTerm={filterTerm} onChange={handleSearchTermChange}/>
       <h2>add a new</h2>
       <PersonForm onSubmit={addNewPerson} onNameChange={handleNewNameChange} onNumberChange={handleNewPhoneNumberChange} newName={newName} newPhoneNumber={newPhoneNumber}/>
