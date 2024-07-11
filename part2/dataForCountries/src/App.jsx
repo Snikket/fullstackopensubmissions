@@ -28,17 +28,16 @@ function App() {
   return (
     <div>
       <Filter filterTerm={filterTerm} onChange={handleSearchTermChange} />
-
       {filterTerm && countriesToShow.length > 1 ? (
         countriesToShow.length > 10 ? (
-          <Notification message="Too many matches, specify another term" />
+          <Notification message="Too many matches, specify another filter" />
         ) : (
-          <Countries countries={countriesToShow} />
+          <Countries countries={countriesToShow} setFilterTerm={setFilterTerm} />
         )
       ) : null}
 
       {countriesToShow.length === 1 ? (
-        <Country country={countriesToShow[0]} />
+        <Country country={countriesToShow[0]}/> 
       ) : null}
     </div>
   );
