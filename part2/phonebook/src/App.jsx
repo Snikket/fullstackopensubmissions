@@ -4,14 +4,15 @@ import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
 import Persons from './components/Persons'
 import personService from './services/persons'
-import SuccessNotification from './components/SuccessNotification'
+import Notification from './components/Notification'
 
 const App = () => {
   const [persons, setPersons] = useState([]) 
   const [newName, setNewName] = useState('');
   const [newPhoneNumber, setNewPhoneNumber] = useState('');
   const [filterTerm, setFilterTerm] = useState('');
-  const [successMessage, setSuccessMessage] = useState(null);
+  const [notificationMessage, setNotificationMessage] = useState(null);
+  const [notificationType, setNotificationType] = useState(null);
 
   useEffect(() => {
     console.log('in effect')
@@ -46,9 +47,10 @@ const App = () => {
       if (confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)){
         personService.update(id, newPerson)
         .then(returnedPerson => {
-          setSuccessMessage(`${returnedPerson.name}'s phone number has been updated to ${returnedPerson.phoneNumber}`)
+          setNotificationMessage(`${returnedPerson.name}'s phone number has been updated to ${returnedPerson.phoneNumber}`)
+          setNotificationType('success')
           setTimeout(() => {
-            setSuccessMessage(null)
+            setNotificationMessage(null)
           }, 5000)
           setPersons(persons.filter(person => person.name !== newPerson.name).concat(returnedPerson))
           setNewName('');
@@ -62,9 +64,10 @@ const App = () => {
       personService.create(newPerson)
       .then(returnedPerson => {
         setPersons(persons.concat(returnedPerson))
-        setSuccessMessage(`Added ${returnedPerson.name}`)
+        setNotificationMessage(`Added ${returnedPerson.name}`)
+        setNotificationType('success')
         setTimeout(() => {
-          setSuccessMessage(null)
+          setNotificationMessage(null)
         }, 5000)
         setNewName('');
         setNewPhoneNumber('');
@@ -79,14 +82,18 @@ const App = () => {
     personService.deletePerson(personIdToDelete)
     .then(() => setPersons(persons.filter(person=> person.id !== personIdToDelete)))
     .catch(error => {
-      alert(`The person with id ${id} does not exist in the DB`)
+      setNotificationMessage(`The person with id ${person.id} does not exist in the DB`)
+      setNotificationType('error')
+      setTimeout(() => {
+        setNotificationMessage(null)
+      }, 5000)
     })}
   }
 
   return (
     <div>
       <h2>Phonebook</h2>
-      <SuccessNotification message={successMessage}/>
+      <Notification type={notificationType} message={notificationMessage}/>
       <Filter filterTerm={filterTerm} onChange={handleSearchTermChange}/>
       <h2>add a new</h2>
       <PersonForm onSubmit={addNewPerson} onNameChange={handleNewNameChange} onNumberChange={handleNewPhoneNumberChange} newName={newName} newPhoneNumber={newPhoneNumber}/>
